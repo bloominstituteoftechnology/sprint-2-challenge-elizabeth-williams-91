@@ -6,23 +6,100 @@
   <script id="challenge">
     // 👉 CHALLENGE 1
     function profileActivation(profile, reason) {
-
+    if (profile.active) { // If profile is active
+        if (reason !== undefined) {
+            profile.active = false;
+            profile.reason = reason;
+            return profile;
+        } else {
+            return "confirm status manually";
+        }
+    } else { // If profile is inactive
+        delete profile.reason;
+        profile.active = true;
+        return profile;
     }
+}
+
+// Example usage:
+let profile1 = { id: 1, name: 'John', active: true };
+let profile2 = { id: 2, name: 'Alice', active: false, reason: 'Account suspended' };
+
+console.log(profileActivation(profile1, "Account suspended")); // Deactivate with reason
+console.log(profileActivation(profile2)); // Activate without reason
+
+
 
     // 👉 CHALLENGE 2
     function mineSweeper(grid, x, y) {
-
+    if (x < 1 || x > grid.length || y < 1 || y > grid[0].length) {
+        return "invalid coordinates";
     }
 
+    const cell = grid[y - 1][x - 1]; // Adjusted the indices for grid access
+    if (cell === "🟥") {
+        return "🟥 💀"; // Red square, mine
+    } else if (cell === "🟦") {
+        return "🟦 🥳"; // Blue square, safe spot
+    }
+}
+
+// Example usage:
+console.log(mineSweeper([["🟦","🟥","🟦"],["🟦","🟦","🟦"],["🟥","🟦","🟥"]], 2, 1)); // 🟥 💀
+console.log(mineSweeper([["🟥","🟦","🟦"],["🟥","🟦","🟥"],["🟦","🟦","🟦"]], 1, 2)); // 🟥 💀
+console.log(mineSweeper([["🟥","🟦","🟥"],["🟥","🟥","🟥"],["🟥","🟦","🟥"]], 2, 3)); // 🟦 🥳
     // 👉 CHALLENGE 3
     function booleanize(obj) {
-
+    for (let prop in obj) {
+        if (prop.length > 9) {
+            return "shorten all prop names to 9 chars or less";
+        }
+        if (obj[prop] === 0) {
+            obj[prop] = false;
+        } else if (obj[prop] === 1) {
+            obj[prop] = true;
+        } else if (obj[prop] === null) {
+            delete obj[prop];
+        }
     }
+    return obj;
+}
 
+// Example usage:
+const obj = {
+    prop1: 0,
+    prop2: 1,
+    prop3: null,
+    longPropertyName: 1
+};
+
+console.log(booleanize(obj));
     // 👉 CHALLENGE 4
     function scrub(text, forbidden) {
-
+    if (!text || !forbidden.length) {
+        return text;
     }
+
+    // Split the text into words and remove punctuation
+    const words = text.replace(/[^\w\s]/g, '').split(/\s+/);
+
+    // Iterate through the words
+    const scrubbedText = words.map(word => {
+        // Check if the word is forbidden
+        if (forbidden.includes(word.toLowerCase())) {
+            // Replace the word with 'x' characters of equal length
+            return 'x'.repeat(word.length);
+        }
+        return word;
+    }).join(' ');
+
+    return scrubbedText;
+}
+
+// Example usage:
+const text = "This is a sample text with some forbidden words like bad and evil.";
+const forbiddenWords = ["bad", "evil"];
+console.log(scrub(text, forbiddenWords)); // Output: "This is a sample text with some forbidden words like xxx and xxxx."
 
     // 👉 CHALLENGE 5 (bonus, NOT graded)
     function normalizePhoneNumber(num) {
